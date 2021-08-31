@@ -13,9 +13,9 @@ ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 
 #test of files, that i want to have removed
-#${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && tee /etc/apt/apt.conf.d/20listchanges
-#${SUDO} rm /etc/apt/apt.conf.d/*proxy* 
-#${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy
+${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt remove --purge apt-listchanges
+${SUDO} rm -f /etc/apt/apt.conf.d/*proxy* 
+${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy
 
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 ${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";' | tee /etc/apt/apt.conf.d/dont_keep_download_files
@@ -54,8 +54,8 @@ ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde
 
 
 # start apt stuff
-${SUDO} apt-get update
-${SUDO} apt-get dist-upgrade
-${SUDO} apt-get autoremove
-${SUDO} rm /var/cache/apt/archives/*
+${SUDO} apt-get update -y
+${SUDO} apt-get dist-upgrade -y
+${SUDO} apt-get autoremove -y
+${SUDO} rm -r /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
