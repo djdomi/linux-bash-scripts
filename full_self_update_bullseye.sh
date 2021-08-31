@@ -16,11 +16,11 @@ apt
 #test of files, that i want to have removed
 ${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -y remove --purge apt-listchanges
 ${SUDO} rm -f /etc/apt/apt.conf.d/*proxy* 
-${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy  2&>1 >/dev/null
+${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy 2&>1 >/dev/null
 
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
-${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";' | tee /etc/apt/apt.conf.d/dont_keep_download_files  2&>1 >/dev/null
-${SUDO} echo 'Dir::Cache "";nDir::Cache::archives "";' | tee  /etc/apt/apt.conf.d/00_disable-cache-directories  2&>1 >/dev/null
+${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";' | tee /etc/apt/apt.conf.d/dont_keep_download_files 2&>1 >/dev/null
+${SUDO} echo 'Dir::Cache "";nDir::Cache::archives "";' | tee  /etc/apt/apt.conf.d/00_disable-cache-directories 2&>1 >/dev/null
 
 
 #add default compress options to /etc/logroate.d
@@ -37,22 +37,22 @@ echo adding sources
 
 
 #Update source.list (make it empty)
-${SUDO} echo ''																							| tee /etc/apt/sources.list  2&>1 >/dev/null
+${SUDO} echo ''																							| tee /etc/apt/sources.list 2&>1 >/dev/null
 
 #Update sources.list.d
-${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free'							| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb     http://deb.debian.org/debian-security/ bullseye-security main contrib non-free' 		| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb-src http://deb.debian.org/debian-security/ bullseye-security main contrib non-free' 		| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-updates main contrib non-free' 					| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-updates main contrib non-free' 					| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
-${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list  2&>1 >/dev/null
+${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free'							| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb     http://deb.debian.org/debian-security/ bullseye-security main contrib non-free' 		| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb-src http://deb.debian.org/debian-security/ bullseye-security main contrib non-free' 		| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-updates main contrib non-free' 					| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-updates main contrib non-free' 					| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
 
 ${SUDO} clear
 
 
-${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2&>1 >/dev/null
+${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2&>1 >/dev/null
 
 clear
 
