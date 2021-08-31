@@ -6,7 +6,7 @@ fi
 ${SUDO} export LC_ALL=$LANG
 
 # Install pre-requirements
-${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2c
+${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2
 
 #Export Variables we want to use
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
@@ -14,7 +14,8 @@ ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 
 #test of files, that i want to have removed
 ${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && tee /etc/apt/apt.conf.d/20listchanges
-${SUDO} rm /etc/apt/apt.conf.d/*proxy*; echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy
+${SUDO} rm /etc/apt/apt.conf.d/*proxy* 
+#${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy
 
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 ${SUDO} echo   'Binary::apt::APT::Keep-Downloaded-Packages "false";' 									| tee /etc/apt/apt.conf.d/dont_keep_download_files
