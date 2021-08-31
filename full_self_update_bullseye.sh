@@ -1,3 +1,4 @@
+#!/bin/bash
 # /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
