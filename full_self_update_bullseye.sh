@@ -4,7 +4,7 @@ if [ "$(whoami)" != "root" ]; then
     SUDO=sudo
 fi
 ${SUDO} export LC_ALL=$LANG
-
+${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
 ${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2
 
@@ -30,7 +30,9 @@ ${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz
 ${SUDO} wget -O /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg
 ${SUDO} sh -c 'echo "deb https://packages.sury.org/bind/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/bind.list'
 
+clear
 
+echo adding sources
 
 
 #Update source.list (make it empty)
@@ -46,11 +48,12 @@ ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-updates main contrib
 ${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list
 
+clear
 
 
-${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8
+${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 
-
+clear
 
 
 # start apt stuff
@@ -59,3 +62,10 @@ ${SUDO} apt-get dist-upgrade -y
 ${SUDO} apt-get autoremove -y
 ${SUDO} rm -r /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
+
+
+if [ -f /var/run/reboot-required ] 
+then
+    echo "[*** reboot is required for your machine ***]"
+	reboot -t 10
+fi
