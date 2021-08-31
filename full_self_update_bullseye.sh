@@ -67,5 +67,5 @@ ${SUDO} /usr/sbin/localepurge
 if [ -f /var/run/reboot-required ] 
 then
     echo "[*** reboot is required for your machine ***]"
-	reboot -t 10
+	reboot
 fi
