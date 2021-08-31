@@ -1,1 +1,2 @@
 
+/etc/locale.nopurge
