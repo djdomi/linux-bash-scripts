@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -e
 
 #fail the script, in case on error
 #set -euxo pipefail
@@ -6,7 +6,7 @@
 # /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
-    SUDO=sudo
+    export SUDO=sudo
 fi
 
 #pre-run dpkg, if it failed previously
@@ -19,7 +19,7 @@ ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 
 #${SUDO} export LC_ALL=$LANG
 echo creating locale.purge as pre-selection file.
-${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 > /etc/locale.nopurge  2>&1 >/dev/null
+${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
 # Install pre-requirements
 clear
 tput clear
@@ -83,7 +83,7 @@ ${SUDO} apt-get -qqqqq update
 tput clear
 echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get  -qqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade | debconf-apt-progress
+${SUDO} apt-get  -qy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade | debconf-apt-progress
 tput clear
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
