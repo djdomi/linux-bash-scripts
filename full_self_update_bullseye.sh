@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
 
 #fail the script, in case on error
-set -e
+set -euxo pipefail
 
 # /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
 #Check if we need sudo
@@ -14,7 +14,7 @@ fi
 dpkg --configure -a --force-confold
 
 #Export Variables
-${SUDO} export LC_ALL=$LANG
+#${SUDO} export LC_ALL=$LANG
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
 ${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
@@ -36,10 +36,11 @@ ${SUDO} echo 'Dir::Cache "";nDir::Cache::archives "";' | tee  /etc/apt/apt.conf.
 #add default compress options to /etc/logroate.d
 ${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all
 
-#bind 9 source
-
+#sury.org packages
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
-${SUDO} sh -c 'echo "deb https://packages.sury.org/bind/ bullseye main"' tee /etc/apt/sources.list.d/bind.list 2&>1 >/dev/null
+${SUDO} wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+${SUDO} sh -c 'echo deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2&>1 >/dev/null
+${SUDO} sh -c 'echo "deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/bind.list 2&>1 >/dev/null
 
 clear
 
@@ -69,8 +70,8 @@ ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde
 
 # start apt stuff
 ${SUDO} apt-get update -qy
-${SUDO} apt-get dist-upgrade -y
-${SUDO} apt-get autoremove -y
+${SUDO} apt-get dist-upgrade -qy
+${SUDO} apt-get autoremove -qy
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
 
