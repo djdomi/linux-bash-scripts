@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash 
 
 #fail the script, in case on error
 #set -euxo pipefail
@@ -17,7 +17,8 @@ dpkg --configure -a --force-confold --force-confdef
 #${SUDO} export LC_ALL=$LANG
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
-${SUDO} DEBIAN_FRONTEND=noninteractive apt-get -yq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+DEBIAN_FRONTEND=noninteractive 
+${SUDO} apt-get -yq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
 
 #Export Variables we want to use
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
@@ -37,8 +38,9 @@ ${SUDO} echo 'Dir::Cache "";nDir::Cache::archives "";' | tee  /etc/apt/apt.conf.
 ${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all
 
 #sury.org packages
+rm -f /etc/apt/trusted.gpg.d/bind.gpg /etc/apt/trusted.gpg.d/php.gpg
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
-${SUDO} wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 ${SUDO} sh -c 'echo deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2&>1 >/dev/null
 ${SUDO} sh -c 'echo "deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/bind.list 2&>1 >/dev/null
 
@@ -70,8 +72,9 @@ ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde
 
 # start apt stuff
 ${SUDO} apt-get update -qy
-${SUDO} DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
-${SUDO} DEBIAN_FRONTEND=noninteractive apt-get autoremove -qy
+DEBIAN_FRONTEND=noninteractive 
+${SUDO} apt-get dist-upgrade -qy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+${SUDO} apt-get autoremove -qy
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
 
