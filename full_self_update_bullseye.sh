@@ -34,7 +34,7 @@ tput clear
 
 if [ ! -e "$cronfile" ]; then
     ${SUDO} echo '@daily root /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee $cronfile	
-	${SUDO} chmod +rx /etc/cron.d/self-update
+	${SUDO} chmod 644 /etc/cron.d/self-update
 	tput clear
 fi 
 
