@@ -38,13 +38,13 @@ tput clear
 #test of files, that i want to have removed
 
 if [ ! -e "$cronfile" ]; then
-    ${SUDO} echo '@daily root /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee $cronfile	
+    ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee $cronfile	
 	${SUDO} chmod 644 /etc/cron.d/self-update
 	tput clear
 fi 
 
 echo 'removing apt-listchanges, it sucks a lot..'
-${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && ${SUDO}  apt -qqqqy remove --purge apt-listchanges; echo 'removed apt-listchanges, next step'
+${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && ${SUDO}  apt -qqqqqqy remove --purge apt-listchanges; echo 'removed apt-listchanges, next step'
 
 if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
     echo deleting old proxy config
@@ -87,7 +87,7 @@ fi
 
 #sury.org packages
 ${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
-${SUDO} test- f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
+${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 ${SUDO} echo 'deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
@@ -134,7 +134,7 @@ ${SUDO} apt-get -qqqqq update
 tput clear
 echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get  -qqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
+${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
 tput clear
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
