@@ -18,7 +18,7 @@ ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 
 #${SUDO} export LC_ALL=$LANG
-${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2>&1 >/dev/null
+${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 > /etc/locale.nopurge  2>&1 >/dev/null
 # Install pre-requirements
 
 ${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common debconf-apt-progress
@@ -50,7 +50,7 @@ echo '(re-)adding sources'
 
 
 #Update source.list (make it empty)
-${SUDO} echo ''																							| tee /etc/apt/sources.list 2>&1 >/dev/null
+${SUDO} echo ''																								| tee /etc/apt/sources.list
 tput clear
 clear
 #Update sources.list.d
