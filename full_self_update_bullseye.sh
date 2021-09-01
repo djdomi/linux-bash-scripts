@@ -39,15 +39,22 @@ if [ ! -e "$cronfile" ]; then
 fi 
 
 echo 'removing apt-listchanges, it sucks a lot..'
-${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -qqqqy remove --purge apt-listchanges
-${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
-echo 'removed apt-listchanges, next step'
+${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -qqqqy remove --purge apt-listchanges; echo 'removed apt-listchanges, next step'
+
+if [ ! -e "/etc/apt/apt.conf.d/.proxy_is_set_automaticly_already" ]; then
+    echo deleting old proxy config
+		rm -f /etc/apt/apt.conf.d/*proxy*
+			touch /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
+	tput clear
+fi
+
+
 tput clear
 
 
 if [ ! -e "$proxyfile" ]; then
     echo adding proxy
-	${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy 2>&1 >/dev/null | tee $proxyfile	
+		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy 2>&1 >/dev/null | tee $proxyfile	
 	tput clear
 fi
 
