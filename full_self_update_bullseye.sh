@@ -4,6 +4,7 @@
 #set -euxo pipefail
 
 # /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
+
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
     export SUDO=sudo
@@ -16,23 +17,40 @@ dpkg --configure -a --force-confold --force-confdef
 #Export Variables
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
+export cronfile=/etc/cron.d/self-update
+
 
 #${SUDO} export LC_ALL=$LANG
 echo creating locale.purge as pre-selection file.
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
 # Install pre-requirements
-clear
 tput clear
 
 echo 'installing pre-requirements'
-${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common debconf-apt-progress
-clear
+${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common debconf-apt-progress
 tput clear
 
 #test of files, that i want to have removed
+
+if [ ! -e "$cronfile" ]; then
+    echo '@daily root /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee $cronfile	
+	chmod +rx /etc/cron.d/self-update
+	tput clear
+fi 
+
+echo 'removing apt-listchanges, it sucks a lot..'
 ${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -qqqqy remove --purge apt-listchanges
-${SUDO} rm -f /etc/apt/apt.conf.d/*proxy* 
-${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy 2>&1 >/dev/null
+${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
+echo 'removed apt-listchanges, next step'
+tput clear
+
+
+if [ ! -e "$proxyfile" ]; then
+    echo adding proxy
+	${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy 2>&1 >/dev/null | tee $proxyfile	
+	tput clear
+fi
+
 
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 ${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";' | tee /etc/apt/apt.conf.d/dont_keep_download_files 2>&1 >/dev/null
@@ -83,7 +101,7 @@ ${SUDO} apt-get -qqqqq update
 tput clear
 echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get  -qy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade | debconf-apt-progress
+${SUDO} apt-get  -qqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
 tput clear
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
