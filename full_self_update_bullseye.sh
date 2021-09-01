@@ -78,7 +78,7 @@ ${SUDO} apt-get -qqqqq update
 tput clear
 echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get dist-upgrade -qqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+${SUDO} apt-get  -qqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade
 tput clear
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
