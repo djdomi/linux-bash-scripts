@@ -50,6 +50,7 @@ ${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-backports main contr
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
 
 ${SUDO} clear
+${SUDO} tput clear
 
 
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2&>1 >/dev/null
