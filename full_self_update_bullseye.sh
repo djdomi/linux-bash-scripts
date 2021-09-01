@@ -51,7 +51,8 @@ echo '(re-)adding sources'
 
 #Update source.list (make it empty)
 ${SUDO} echo ''																							| tee /etc/apt/sources.list 2>&1 >/dev/null
-
+tput clear
+clear
 #Update sources.list.d
 ${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free'							| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
@@ -63,7 +64,8 @@ ${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-backports main contr
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 ${SUDO} echo 'deb http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'				| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'			| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
-
+clear
+tput clear
 
 #we re-set the Options we want to use
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2>&1 >/dev/null
