@@ -17,7 +17,7 @@ dpkg --configure -a --force-confold
 #${SUDO} export LC_ALL=$LANG
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
-${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
+${SUDO} DEBIAN_FRONTEND=noninteractive apt-get -yq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
 
 #Export Variables we want to use
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
@@ -70,8 +70,8 @@ ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde
 
 # start apt stuff
 ${SUDO} apt-get update -qy
-${SUDO} apt-get dist-upgrade -qy
-${SUDO} apt-get autoremove -qy
+${SUDO} DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+${SUDO} DEBIAN_FRONTEND=noninteractive apt-get autoremove -qy
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
 
