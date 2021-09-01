@@ -1,13 +1,23 @@
 #!/bin/bash
+
+#fail the script, in case on error
+set -e
+
 # /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
     SUDO=sudo
 fi
+
+#pre-run dpkg, if it failed previously
+
+dpkg --configure -a --force-confold
+
+#Export Variables
 ${SUDO} export LC_ALL=$LANG
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
-${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2
+${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
 
 #Export Variables we want to use
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
@@ -28,8 +38,8 @@ ${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz
 
 #bind 9 source
 
-${SUDO} wget -O /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg
-${SUDO} sh -c 'echo "deb https://packages.sury.org/bind/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/bind.list'
+${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
+${SUDO} sh -c 'echo "deb https://packages.sury.org/bind/ bullseye main"' tee /etc/apt/sources.list.d/bind.list 2&>1 >/dev/null
 
 clear
 
@@ -48,14 +58,13 @@ ${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-updates main contrib
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-updates main contrib non-free' 					| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
 ${SUDO} echo 'deb     http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
 ${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-backports main contrib non-free' 				| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'				| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
+${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'			| tee -a /etc/apt/sources.list.d/main.list 2&>1 >/dev/null
 
-${SUDO} clear
-${SUDO} tput clear
 
-
+#we re-set the Options we want to use
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2&>1 >/dev/null
 
-clear
 
 
 # start apt stuff
@@ -66,6 +75,7 @@ ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
 
 
+# Self Explaining, Testing if Reboot is  requrired, and if, we DO it 
 if [ -f /var/run/reboot-required ] 
 then
     echo "[*** reboot is required for your machine ***]"
