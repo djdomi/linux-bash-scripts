@@ -81,8 +81,8 @@ fi
 
 
 #sury.org packages
-${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg rm -f /etc/apt/trusted.gpg.d/bind.gpg 
-${SUDO} test- f /etc/apt/trusted.gpg.d/php.gpg rm -f /etc/apt/trusted.gpg.d/php.gpg
+${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
+${SUDO} test- f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 ${SUDO} echo 'deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
