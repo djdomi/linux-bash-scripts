@@ -21,7 +21,7 @@ ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
 
-${SUDO} apt-get -yqq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common debconf-apt-progress
 
 
 #test of files, that i want to have removed
@@ -44,9 +44,9 @@ ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/ap
 ${SUDO} echo 'deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 
-clear
+tput clear
 
-echo adding sources
+echo '(re-)adding sources'
 
 
 #Update source.list (make it empty)
@@ -71,15 +71,15 @@ ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde
 
 
 # start apt stuff
-echo updating sources
-${SUDO} apt-get update -qqy
+echo Done, updating sources.
+${SUDO} apt-get -qqqqq update 
 tput clear
 echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get dist-upgrade -qqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+${SUDO} apt-get dist-upgrade -qqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
 tput clear
 echo Fine also, lets remove unneded stuff
-${SUDO} apt-get autoremove -qqy
+${SUDO} apt-get -qqqqqy autoremove 
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
 tput clear
@@ -89,5 +89,7 @@ then
     echo "[*** reboot is required for your machine ***]"
 	reboot
 	else
+	tput clear
+	clear
 	echo "[*** all is fine, no reboot required ***]"
 fi
