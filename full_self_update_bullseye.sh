@@ -18,14 +18,19 @@ ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 
 #${SUDO} export LC_ALL=$LANG
+echo creating locale.purge as pre-selection file.
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 > /etc/locale.nopurge  2>&1 >/dev/null
 # Install pre-requirements
+clear
+tput clear
 
+echo 'installing pre-requirements'
 ${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common debconf-apt-progress
-
+clear
+tput clear
 
 #test of files, that i want to have removed
-${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -y remove --purge apt-listchanges
+${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -qqqqy remove --purge apt-listchanges
 ${SUDO} rm -f /etc/apt/apt.conf.d/*proxy* 
 ${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99_default_proxy 2>&1 >/dev/null
 
@@ -35,7 +40,7 @@ ${SUDO} echo 'Dir::Cache "";nDir::Cache::archives "";' | tee  /etc/apt/apt.conf.
 
 
 #add default compress options to /etc/logroate.d
-${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all
+${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
 
 #sury.org packages
 rm -f /etc/apt/trusted.gpg.d/bind.gpg /etc/apt/trusted.gpg.d/php.gpg
