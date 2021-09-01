@@ -140,10 +140,10 @@ tput clear
 # Self Explaining, Testing if Reboot is  requrired, and if, we DO it 
 if [ -f /var/run/reboot-required ] 
 then
-    echo "[*** reboot is required for your machine ***]"
-	reboot
-	else
 	tput clear
-	clear
-	echo "[*** all is fine, no reboot required ***]"
+			echo "[*** reboot is required for your machine ***]"
+				reboot
+	else
+		tput clear
+			echo "[*** all is fine, no reboot required ***]"
 fi
