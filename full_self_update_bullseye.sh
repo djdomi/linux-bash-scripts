@@ -32,7 +32,7 @@ locale-gen en_US.UTF-8
 tput clear
 
 echo 'installing pre-requirements'
-${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common debconf-apt-progress
+${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
 tput clear
 
 #test of files, that i want to have removed
