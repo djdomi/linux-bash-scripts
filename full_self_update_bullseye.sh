@@ -11,7 +11,7 @@ fi
 
 #pre-run dpkg, if it failed previously
 
-dpkg --configure -a --force-confold
+dpkg --configure -a --force-confold --force-confdef
 
 #Export Variables
 #${SUDO} export LC_ALL=$LANG
