@@ -19,10 +19,14 @@ ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 export cronfile=/etc/cron.d/self-update
 
-
 #${SUDO} export LC_ALL=$LANG
+
 echo creating locale.purge as pre-selection file.
 ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
+locale-gen en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 # Install pre-requirements
 tput clear
 
