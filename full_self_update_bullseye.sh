@@ -14,16 +14,16 @@ fi
 dpkg --configure -a --force-confold --force-confdef
 
 #Export Variables
+${SUDO} export DEBIAN_FRONTEND=noninteractive
+${SUDO} export APT_LISTCHANGES_FRONTEND=none
+
 #${SUDO} export LC_ALL=$LANG
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge
 # Install pre-requirements
-DEBIAN_FRONTEND=noninteractive 
+
 ${SUDO} apt-get -yqq install apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
 
-#Export Variables we want to use
-${SUDO} export DEBIAN_FRONTEND=noninteractive
-${SUDO} export APT_LISTCHANGES_FRONTEND=none
-apt 
+
 #test of files, that i want to have removed
 ${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && apt -y remove --purge apt-listchanges
 ${SUDO} rm -f /etc/apt/apt.conf.d/*proxy* 
@@ -71,14 +71,18 @@ ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde
 
 
 # start apt stuff
+echo updating sources
 ${SUDO} apt-get update -qqy
+tput clear
+echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get dist-upgrade -qy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
-${SUDO} apt-get autoremove -qy
+${SUDO} apt-get dist-upgrade -qqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold"
+tput clear
+echo Fine also, lets remove unneded stuff
+${SUDO} apt-get autoremove -qqy
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} /usr/sbin/localepurge
-
-
+tput clear
 # Self Explaining, Testing if Reboot is  requrired, and if, we DO it 
 if [ -f /var/run/reboot-required ] 
 then
