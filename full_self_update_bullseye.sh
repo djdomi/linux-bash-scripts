@@ -18,6 +18,17 @@ dpkg --configure -a --force-confold --force-confdef
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 ${SUDO} export cronfile=/etc/cron.d/self-update
+
+if [ ! -e "/etc/.locale.is_generated" ]; then
+echo generating locales, please wait
+${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
+${SUDO} locale-gen   2>&1 >/dev/null
+touch /etc/.locale.is_generated
+	tput clear
+fi 
+
+${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
+${SUDO} locale-gen   2>&1 >/dev/null
 ${SUDO} export LANGUAGE=en_US.UTF-8
 ${SUDO} export LANG=en_US.UTF-8
 ${SUDO} export LC_ALL=en_US.UTF-8
@@ -26,7 +37,7 @@ ${SUDO} export LC_ALL=en_US.UTF-8
 
 echo creating locale.purge as pre-selection file.
 ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
-locale-gen en_US.UTF-8
+
 
 # Install pre-requirements
 tput clear
