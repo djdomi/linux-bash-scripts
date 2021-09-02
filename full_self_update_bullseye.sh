@@ -14,7 +14,7 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 if [ ! -e "/etc/.refresh_my_update_script" ]; then
-	tput clear
+	#tput clear
 	echo 'Removing all generated files'
 	rm -f /etc/cron.d/self-update
 	rm -f /etc/.locale.is_generated
@@ -23,7 +23,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	rm -f /etc/logrotate.d/0000_compress_all
 	rm -f /etc/apt/apt.conf.d/*proxy*
 		touch /etc/.refresh_my_update_script
-	tput clear
+	#tput clear
 		else
 			echo "/etc/.refresh_my_update_script Exists, we dont force a full update"
 fi
@@ -39,7 +39,7 @@ echo Settings variables
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 ${SUDO} export cronfile=/etc/cron.d/self-update
-tput clear
+#tput clear
 # generate locales
 if [ ! -e "/etc/.locale.is_generated" ]; then
 		echo generating locales, please wait
@@ -49,7 +49,7 @@ ${SUDO} export LANGUAGE=$LC_ALL
 ${SUDO} export LANG=$LC_ALL
 ${SUDO} export LC_ALL=de_DE.UTF-8
 touch /etc/.locale.is_generated
-	tput clear
+	#tput clear
 fi 
 
 
@@ -61,18 +61,18 @@ ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nd
 
 
 # Install pre-requirements
-tput clear
+#tput clear
 
 echo 'installing pre-requirements'
 ${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
-tput clear
+#tput clear
 
 #test of files, that i want to have removed
 
 if [ ! -e "$cronfile" ]; then
     ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee $cronfile	
 	${SUDO} chmod 644 /etc/cron.d/self-update
-	tput clear
+	#tput clear
 fi 
 
 echo 'removing apt-listchanges, it sucks a lot..'
@@ -82,7 +82,7 @@ if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
     echo deleting old proxy config
 		${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 		${SUDO} touch /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
-	tput clear
+	#tput clear
 fi
 
 
@@ -92,7 +92,7 @@ fi
 if [ ! -e "$proxyfile" ]; then
     echo adding $proxyfile
 		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee $proxyfile 2>&1 >/dev/null | tee $proxyfile	
-	tput clear
+	#tput clear
 fi
 
 
@@ -104,7 +104,7 @@ if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; th
 		${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";'	| tee /etc/apt/apt.conf.d/dont_keep_download_files 2>&1 >/dev/null
 		${SUDO} echo -e 'Dir::Cache "";\nDir::Cache::archives "";'			| tee  /etc/apt/apt.conf.d/00_disable-cache-directories 2>&1 >/dev/null
 		${SUDO} touch /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
-	tput clear
+	#tput clear
 fi
 
 
@@ -113,7 +113,7 @@ fi
 if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
     echo 'adding /etc/logrotate.d/0000_compress_all'
 		${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
-	tput clear
+	#tput clear
 fi
 
 
@@ -125,17 +125,17 @@ ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 ${SUDO} echo 'deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
-tput clear
+#tput clear
 
 #Update source.list (make it empty)
 
 
-tput clear
+#tput clear
 
 #Update sources.list.d
 
 if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; then
-		tput clear
+		#tput clear
 			echo 'clearing sources.list since we use /etc/apt/sources.list.d/main.list'
 			${SUDO} echo > /etc/apt/sources.list
 				rm -f /etc/apt/sources.list.d/main.list
@@ -152,7 +152,7 @@ if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; the
 		${SUDO} touch /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
 
 
-	tput clear
+	#tput clear
 fi
 
 
@@ -164,11 +164,11 @@ fi
 # start apt stuff
 echo Done, updating sources.
 ${SUDO} apt-get -qqqqq update 
-tput clear
+#tput clear
 echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
 ${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
-tput clear
+#tput clear
 
 
 echo Fine also, lets remove unneded stuff
@@ -176,18 +176,18 @@ ${SUDO} apt-get -qqqqqy autoremove
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2>&1 >/dev/null
 ${SUDO} /usr/sbin/localepurge
-tput clear
+#tput clear
 # Self Explaining, Testing if Reboot is  requrired, and if, we DO it 
 if [ -f /var/run/reboot-required ] 
 then
-	tput clear
+	#tput clear
 			echo "[*** reboot is required for your machine ***]"
 			echo "[*** 10 Seconds remainig ***]"
 					sync
 					sleep 10
 				reboot
 	else
-		tput clear
+		#tput clear
 		sync
 			echo "[*** all is fine, no reboot required ***]"
 			echo "[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]"
