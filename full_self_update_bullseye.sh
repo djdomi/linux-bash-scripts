@@ -183,10 +183,12 @@ then
 	tput clear
 			echo "[*** reboot is required for your machine ***]"
 			echo "[*** 10 Seconds remainig ***]"
+					sync
 					sleep 10
 				reboot
 	else
 		tput clear
+		sync
 			echo "[*** all is fine, no reboot required ***]"
 			echo "[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]"
 fi
