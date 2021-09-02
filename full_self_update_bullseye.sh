@@ -14,10 +14,18 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 if [ ! -e "/etc/.refresh_my_update_script" ]; then
-	echo 'Remvoing all generated files'
-	rm /etc/cron.d/self-update
-	rm /etc/.locale.is_generated
-	rm 
+	tput clear
+	echo 'Removing all generated files'
+	rm -f /etc/cron.d/self-update
+	rm -f /etc/.locale.is_generated
+	rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
+	rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
+	rm -f /etc/logrotate.d/0000_compress_all
+	rm -f /etc/apt/apt.conf.d/*proxy*
+		touch /etc/.refresh_my_update_script
+	tput clear
+		else
+			echo "/etc/.refresh_my_update_script Exists, we dont force a full update"
 fi
 	
 
@@ -34,16 +42,17 @@ ${SUDO} export cronfile=/etc/cron.d/self-update
 tput clear
 # generate locales
 if [ ! -e "/etc/.locale.is_generated" ]; then
-echo generating locales, please wait
+		echo generating locales, please wait
 ${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
 ${SUDO} locale-gen   2>&1 >/dev/null
+${SUDO} export LANGUAGE=$LC_ALL
+${SUDO} export LANG=$LC_ALL
+${SUDO} export LC_ALL=de_DE.UTF-8
 touch /etc/.locale.is_generated
 	tput clear
 fi 
 
-${SUDO} export LANGUAGE=en_US.UTF-8
-${SUDO} export LANG=en_US.UTF-8
-${SUDO} export LC_ALL=en_US.UTF-8
+
 
 #${SUDO} export LC_ALL=$LANG
 
@@ -120,13 +129,15 @@ tput clear
 
 #Update source.list (make it empty)
 
-${SUDO} echo ''																								| tee /etc/apt/sources.list
+
 tput clear
 
 #Update sources.list.d
 
 if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; then
+		tput clear
 			echo 'clearing sources.list since we use /etc/apt/sources.list.d/main.list'
+			${SUDO} echo > /etc/apt/sources.list
 				rm -f /etc/apt/sources.list.d/main.list
 		${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee    /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free'							| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
@@ -171,9 +182,11 @@ if [ -f /var/run/reboot-required ]
 then
 	tput clear
 			echo "[*** reboot is required for your machine ***]"
-			echo "[*** 10 Seconds ***]"
+			echo "[*** 10 Seconds remainig ***]"
+					sleep 10
 				reboot
 	else
 		tput clear
 			echo "[*** all is fine, no reboot required ***]"
+			echo "[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]"
 fi
