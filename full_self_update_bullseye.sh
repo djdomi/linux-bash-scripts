@@ -51,7 +51,7 @@ ${SUDO} export LC_ALL=de_DE.UTF-8
 touch /etc/.locale.is_generated
 	#tput clear
 	else
-	else 'echo Step 03-[*** Skipped ***]'
+	echo 'Step 03-[*** Skipped ***]'
 fi 
 
 
@@ -89,7 +89,8 @@ if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
 		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
 		${SUDO} touch /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
 	#tput clear
-	else 'echo Step 07-[*** Skipped ***]'
+	else 
+		echo 'Step 07-[*** Skipped ***]'
 fi
 
 
@@ -105,7 +106,7 @@ if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; th
 		${SUDO} touch /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
 	#tput clear
 	else
-	else 'echo Step 08-[*** Skipped ***]'
+	echo 'Step 08-[*** Skipped ***]'
 	
 fi
 
@@ -117,7 +118,7 @@ if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
 		${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
 	#tput clear
 	else
-	else 'echo Step 09-[*** Skipped ***]'
+	echo 'Step 09-[*** Skipped ***]'
 fi
 
 
