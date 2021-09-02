@@ -20,10 +20,11 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 		echo 'Step 01-[*** /etc/.refresh_my_update_script was missing ***]'
 		echo 'Step 01-[*** Removing all generated files' ***]
 	${SUDO} rm -f /etc/cron.d/self-update
+	${SUDO} rm -f /etc/logrotate.d/0000_compress_all
 	${SUDO} rm -f /etc/.locale.is_generated
 	${SUDO} rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
 	${SUDO} rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
-	${SUDO} rm -f /etc/logrotate.d/0000_compress_all
+	${SUDO} rm -f /etc/sources.list.d/.packages.sury.org.list
 	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 		touch /etc/.refresh_my_update_script
 	tput clear
@@ -121,29 +122,28 @@ fi
 
 
 #sury.org packages
-echo 'step 10-[*** Always Updating 3rd party Sources and ***]'
+echo 'step 10-[*** Always Updating 3rd party GPG-Keys ***]'
 ${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
 ${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 
 if [ ! -e "/etc/sources.list.d/.packages.sury.org.list" ]; then
+		echo 'Step 11-[*** Updating Third-Party Source ***]'
 ${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
-
+		touch /etc/sources.list.d/.packages.sury.org.list
+	else
+		else 'echo Step 11-[*** Skipped ***]'
 fi
-#tput clear
-
-#Update source.list (make it empty)
 
 
-#tput clear
 
 #Update sources.list.d
 
 if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; then
 		#tput clear
-			echo 'clearing sources.list since we use /etc/apt/sources.list.d/main.list'
+			echo 'Step 12-[*** Clearing sources.list since we use /etc/apt/sources.list.d/main.list ***]'
 			${SUDO} echo > /etc/apt/sources.list
 				rm -f /etc/apt/sources.list.d/main.list
 		${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee    /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
@@ -157,26 +157,20 @@ if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; the
 		${SUDO} echo 'deb http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'				| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'			| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} touch /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
-
+else
+			echo 'Step 12-[*** Skipped ***]'
 
 	#tput clear
 fi
-
-
-
-#we re-set the Options we want to use
-
-
 
 # start apt stuff
 echo Done, updating sources.
 ${SUDO} apt-get -qqqqq update 
 #tput clear
-echo fine, starting system upgrade... Please be Patient
+echo '[*** Well... Lets Starting system upgrade... Please be Patient ***]'
 DEBIAN_FRONTEND=noninteractive 
 ${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
 #tput clear
-
 
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
