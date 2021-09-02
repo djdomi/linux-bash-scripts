@@ -32,8 +32,6 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 		echo 'Step 01-[*** Skipped ***]'
 fi
 	
-
-
 #pre-run dpkg, if it failed previously
 
 echo 'Step 02-[*** Checking for already, broken installation ***]'
@@ -53,8 +51,6 @@ touch /etc/.locale.is_generated
 	else
 	echo 'Step 03-[*** Skipped ***]'
 fi 
-
-
 
 #${SUDO} export LC_ALL=$LANG
 
@@ -80,9 +76,6 @@ if [ ! -e "/etc/cron.d/self-update" ]; then
 		echo 'Step 06-[*** Skipped ***]'
 fi 
 
-
-
-
 if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
     echo 'Step 07-[*** Deleting old proxy config ***]'
 		${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
@@ -92,9 +85,6 @@ if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
 	else 
 		echo 'Step 07-[*** Skipped ***]'
 fi
-
-
-
 
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 
@@ -110,7 +100,6 @@ if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; th
 	
 fi
 
-
 #add default compress options to /etc/logroate.d
 
 if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
@@ -120,7 +109,6 @@ if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
 	else
 		echo 'Step 09-[*** Skipped ***]'
 fi
-
 
 #sury.org packages
 echo 'step 10-[*** Always Updating 3rd party GPG-Keys ***]'
@@ -137,8 +125,6 @@ ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/
 	else
 		echo 'Step 11-[*** Skipped ***]'
 fi
-
-
 
 #Update sources.list.d
 
@@ -160,10 +146,9 @@ if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; the
 		${SUDO} touch /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
 	else
 		echo 'Step 12-[*** Skipped ***]'
-
 	#tput clear
-
 fi
+
 # start apt stuff
 echo Done, updating sources.
 ${SUDO} apt-get -qqqqq update 
@@ -172,6 +157,7 @@ echo '[*** Well... Lets Starting system upgrade... Please be Patient ***]'
 DEBIAN_FRONTEND=noninteractive 
 ${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
 #tput clear
+
 
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
@@ -194,5 +180,3 @@ then
 			echo '[*** all is fine, no reboot required ***]'
 			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]'
 fi
-#3
-echo ''
