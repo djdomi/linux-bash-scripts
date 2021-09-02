@@ -189,6 +189,6 @@ then
 	else
 		#tput clear
 		sync
-			echo "[*** all is fine, no reboot required ***]"
-			echo "[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]"
+			echo '[*** all is fine, no reboot required ***]'
+			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]'
 fi
