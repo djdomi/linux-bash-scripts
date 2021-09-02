@@ -26,10 +26,10 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	${SUDO} rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
 	${SUDO} rm -f /etc/sources.list.d/.packages.sury.org.list
 	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
-		touch /etc/.refresh_my_update_script
+	${SUDO} 	touch /etc/.refresh_my_update_script
 	tput clear
-		else
-			else 'echo Step 01-[*** Skipped ***]'
+		else 
+		echo 'Step 01-[*** Skipped ***]'
 fi
 	
 
