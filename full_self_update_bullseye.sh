@@ -24,7 +24,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	${SUDO} rm -f /etc/.locale.is_generated
 	${SUDO} rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
 	${SUDO} rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
-	${SUDO} rm -f /etc/sources.list.d/.packages.sury.org.list
+	${SUDO} rm -f /etc/apt/sources.list.d/.packages.sury.org.list
 	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 	${SUDO} 	touch /etc/.refresh_my_update_script
 	tput clear
@@ -129,11 +129,11 @@ ${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/p
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 
-if [ ! -e "/etc/sources.list.d/.packages.sury.org.list" ]; then
+if [ ! -e "/etc/apt/sources.list.d/.packages.sury.org.list" ]; then
 		echo 'Step 11-[*** Updating Third-Party Source ***]'
 ${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
-		echo > /etc/sources.list.d/.packages.sury.org.list
+	${SUDO}	echo > /etc/apt/sources.list.d/.packages.sury.org.list
 	else
 		echo 'Step 11-[*** Skipped ***]'
 fi
@@ -162,8 +162,8 @@ if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; the
 		echo 'Step 12-[*** Skipped ***]'
 
 	#tput clear
-fi
 
+fi
 # start apt stuff
 echo Done, updating sources.
 ${SUDO} apt-get -qqqqq update 
@@ -194,4 +194,4 @@ then
 			echo '[*** all is fine, no reboot required ***]'
 			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]'
 fi
-#1
+#2
