@@ -133,7 +133,7 @@ if [ ! -e "/etc/sources.list.d/.packages.sury.org.list" ]; then
 		echo 'Step 11-[*** Updating Third-Party Source ***]'
 ${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
-		touch /etc/sources.list.d/.packages.sury.org.list
+		echo > /etc/sources.list.d/.packages.sury.org.list
 	else
 		echo 'Step 11-[*** Skipped ***]'
 fi
