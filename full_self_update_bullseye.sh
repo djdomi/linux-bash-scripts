@@ -177,7 +177,7 @@ echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
 ${SUDO} rm -fr /var/cache/apt/archives/*
 ${SUDO} echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge 2>&1 >/dev/null
-${SUDO} /usr/sbin/localepurge
+${SUDO} /usr/sbin/localepurge 2>&1 >/dev/null
 #tput clear
 # Self Explaining, Testing if Reboot is  requrired, and if, we DO it 
 if [ -f /var/run/reboot-required ] 
