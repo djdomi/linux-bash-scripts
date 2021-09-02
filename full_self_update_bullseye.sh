@@ -106,7 +106,7 @@ if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; th
 		${SUDO} touch /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
 	#tput clear
 	else
-	echo 'Step 08-[*** Skipped ***]'
+		echo 'Step 08-[*** Skipped ***]'
 	
 fi
 
@@ -118,7 +118,7 @@ if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
 		${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
 	#tput clear
 	else
-	echo 'Step 09-[*** Skipped ***]'
+		echo 'Step 09-[*** Skipped ***]'
 fi
 
 
@@ -158,8 +158,8 @@ if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; the
 		${SUDO} echo 'deb http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'				| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye-proposed-updates main contrib non-free'			| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} touch /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
-else
-			echo 'Step 12-[*** Skipped ***]'
+	else
+		echo 'Step 12-[*** Skipped ***]'
 
 	#tput clear
 fi
@@ -194,3 +194,4 @@ then
 			echo '[*** all is fine, no reboot required ***]'
 			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]'
 fi
+#1
