@@ -3,20 +3,22 @@
 #fail the script, in case on error
 #set -euxo pipefail
 
+#Export Variables
+${SUDO} export DEBIAN_FRONTEND=noninteractive
+${SUDO} export APT_LISTCHANGES_FRONTEND=none
+
 # screen -d -m /bin/bash -c "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh?$(date +%s))"
 
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
-    echo i need to use sudo
+    echo '[*** using sudo ***]'
 	export SUDO=sudo
-	
-	
 fi
 
 if [ ! -e "/etc/.refresh_my_update_script" ]; then
-	#tput clear
-		echo '[*** /etc/.refresh_my_update_script was missing ***]'
-		echo '[*** Removing all generated files' ***]
+	tput clear
+		echo 'Step 1-[*** /etc/.refresh_my_update_script was missing ***]'
+		echo 'Step 1-[*** Removing all generated files' ***]
 	${SUDO} rm -f /etc/cron.d/self-update
 	${SUDO} rm -f /etc/.locale.is_generated
 	${SUDO} rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
@@ -24,7 +26,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	${SUDO} rm -f /etc/logrotate.d/0000_compress_all
 	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 		touch /etc/.refresh_my_update_script
-	#tput clear
+	tput clear
 		else
 			echo  '[*** /etc/.refresh_my_update_script exists, continuing ***]'
 fi
@@ -33,16 +35,13 @@ fi
 
 #pre-run dpkg, if it failed previously
 
+echo 'Step 2-[*** Checking for already, broken installation ***]'
 dpkg --configure -a --force-confold --force-confdef
 
-#Export Variables
-echo Settings variables
-${SUDO} export DEBIAN_FRONTEND=noninteractive
-${SUDO} export APT_LISTCHANGES_FRONTEND=none
-#tput clear
+
 # generate locales
 if [ ! -e "/etc/.locale.is_generated" ]; then
-		echo generating locales, please wait
+		echo 'Step 3-[***  generating locales, please wait ***]'
 ${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
 ${SUDO} locale-gen   2>&1 >/dev/null
 ${SUDO} export LANGUAGE=$LC_ALL
@@ -50,39 +49,45 @@ ${SUDO} export LANG=$LC_ALL
 ${SUDO} export LC_ALL=de_DE.UTF-8
 touch /etc/.locale.is_generated
 	#tput clear
+	else
+	echo 'Step 3-[*** It was not needed to generate Locales ***]'
 fi 
 
 
 
 #${SUDO} export LC_ALL=$LANG
 
-echo creating locale.purge as pre-selection file.
+echo 'Step 4-[*** creating locale.purge as pre-selection file. ***]'
 ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
 
 
 # Install pre-requirements
 #tput clear
 
-echo 'installing pre-requirements'
+echo 'Step 5-[*** installing pre-requirement Packages via apt-get ***]'
 ${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install screen apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
 #tput clear
 
 #test of files, that i want to have removed
 
 if [ ! -e "/etc/cron.d/self-update" ]; then
+	echo 'Step 6-[*** Adding cronjob for self updating ***]'
     ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee /etc/cron.d/self-update
 	${SUDO} chmod 644 /etc/cron.d/self-update
 	#tput clear
+	else
+		echo 'Step 6-[*** It was not needed to add the cronjob ***]'
 fi 
 
 
 ${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && ${SUDO}  apt -qqqqqqy remove --purge apt-listchanges 2>&1 >/dev/null; echo 'removed apt-listchanges, which sucked, next step'
 
 if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
-    echo deleting old proxy config
+    echo 'Step 7-[*** Deleting old proxy config ***]'
 		${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 		${SUDO} touch /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
 	#tput clear
+	else 'Step 7-[*** It was not needed to alter the proxy config ***9'
 fi
 
 
@@ -90,7 +95,7 @@ fi
 
 
 if [ ! -e "/etc/apt/apt.conf.d/99proxy" ]; then
-    echo adding Proxy: /etc/apt/apt.conf.d/99proxy
+    echo 'Step 9-[*** adding Proxy: /etc/apt/apt.conf.d/99proxy *****]'
 		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
 	#tput clear
 fi
@@ -99,7 +104,7 @@ fi
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 
 if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; then
-    echo deleting old proxy config
+    echo '[******* deleting old proxy config *******]'
 		${SUDO} rm -f etc/apt/apt.conf.d/dont_keep_download_files /etc/apt/apt.conf.d/00_disable-cache-directories
 		${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";'	| tee /etc/apt/apt.conf.d/dont_keep_download_files 2>&1 >/dev/null
 		${SUDO} echo -e 'Dir::Cache "";\nDir::Cache::archives "";'			| tee  /etc/apt/apt.conf.d/00_disable-cache-directories 2>&1 >/dev/null
@@ -111,7 +116,7 @@ fi
 #add default compress options to /etc/logroate.d
 
 if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
-    echo 'adding /etc/logrotate.d/0000_compress_all'
+    echo '[******** adding /etc/logrotate.d/0000_compress_all ********]'
 		${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
 	#tput clear
 fi
