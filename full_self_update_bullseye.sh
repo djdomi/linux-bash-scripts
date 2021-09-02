@@ -135,7 +135,7 @@ ${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
 		touch /etc/sources.list.d/.packages.sury.org.list
 	else
-		else 'echo Step 11-[*** Skipped ***]'
+		echo 'Step 11-[*** Skipped ***]'
 fi
 
 
