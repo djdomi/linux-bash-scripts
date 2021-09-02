@@ -3,7 +3,7 @@
 #fail the script, in case on error
 #set -euxo pipefail
 
-# screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
+# screen -d -m /bin/bash -c "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh?$(date +%s))"
 
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
@@ -88,9 +88,9 @@ fi
 
 
 
-if [ ! -e "$proxyfile" ]; then
-    echo adding $proxyfile
-		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee $proxyfile 2>&1 >/dev/null | tee $proxyfile	
+if [ ! -e "/etc/apt/apt.conf.d/99proxy" ]; then
+    echo adding Proxy: /etc/apt/apt.conf.d/99proxy
+		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
 	#tput clear
 fi
 
