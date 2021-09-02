@@ -7,18 +7,32 @@
 
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
-    export SUDO=sudo
+    echo i need to use sudo
+	export SUDO=sudo
+	
+	
 fi
+
+if [ ! -e "/etc/.refresh_my_update_script" ]; then
+	echo 'Remvoing all generated files'
+	rm /etc/cron.d/self-update
+	rm /etc/.locale.is_generated
+	rm 
+fi
+	
+
 
 #pre-run dpkg, if it failed previously
 
 dpkg --configure -a --force-confold --force-confdef
 
 #Export Variables
+echo Settings variables
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 ${SUDO} export cronfile=/etc/cron.d/self-update
-
+tput clear
+# generate locales
 if [ ! -e "/etc/.locale.is_generated" ]; then
 echo generating locales, please wait
 ${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
@@ -27,8 +41,6 @@ touch /etc/.locale.is_generated
 	tput clear
 fi 
 
-${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
-${SUDO} locale-gen   2>&1 >/dev/null
 ${SUDO} export LANGUAGE=en_US.UTF-8
 ${SUDO} export LANG=en_US.UTF-8
 ${SUDO} export LC_ALL=en_US.UTF-8
@@ -97,26 +109,25 @@ fi
 
 
 #sury.org packages
+echo 'Updating 3rd party Sources'
 ${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
 ${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 ${SUDO} echo 'deb https://packages.sury.org/php/ bullseye main'   | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
-
 tput clear
 
-echo '(re-)adding sources'
-
-
 #Update source.list (make it empty)
+
 ${SUDO} echo ''																								| tee /etc/apt/sources.list
 tput clear
 
 #Update sources.list.d
 
 if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; then
-		rm -f /etc/apt/sources.list.d/main.list
+			echo 'clearing sources.list since we use /etc/apt/sources.list.d/main.list'
+				rm -f /etc/apt/sources.list.d/main.list
 		${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee    /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free'							| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb     http://deb.debian.org/debian-security/ bullseye-security main contrib non-free' 		| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
@@ -147,6 +158,8 @@ echo fine, starting system upgrade... Please be Patient
 DEBIAN_FRONTEND=noninteractive 
 ${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
 tput clear
+
+
 echo Fine also, lets remove unneded stuff
 ${SUDO} apt-get -qqqqqy autoremove 
 ${SUDO} rm -fr /var/cache/apt/archives/*
@@ -158,6 +171,7 @@ if [ -f /var/run/reboot-required ]
 then
 	tput clear
 			echo "[*** reboot is required for your machine ***]"
+			echo "[*** 10 Seconds ***]"
 				reboot
 	else
 		tput clear
