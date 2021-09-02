@@ -98,6 +98,8 @@ if [ ! -e "/etc/apt/apt.conf.d/99proxy" ]; then
     echo 'Step 09-[*** adding Proxy: /etc/apt/apt.conf.d/99proxy ***]'
 		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
 	#tput clear
+	else
+	echo 'Step 09-[*** NOT adding Proxy ***]'
 fi
 
 
