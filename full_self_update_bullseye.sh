@@ -15,17 +15,18 @@ fi
 
 if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	#tput clear
-	echo 'Removing all generated files'
-	rm -f /etc/cron.d/self-update
-	rm -f /etc/.locale.is_generated
-	rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
-	rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
-	rm -f /etc/logrotate.d/0000_compress_all
-	rm -f /etc/apt/apt.conf.d/*proxy*
+		echo '[*** /etc/.refresh_my_update_script was missing ***]'
+		echo '[*** Removing all generated files' ***]
+	${SUDO} rm -f /etc/cron.d/self-update
+	${SUDO} rm -f /etc/.locale.is_generated
+	${SUDO} rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
+	${SUDO} rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
+	${SUDO} rm -f /etc/logrotate.d/0000_compress_all
+	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 		touch /etc/.refresh_my_update_script
 	#tput clear
 		else
-			echo '/etc/.refresh_my_update_script Exists, we dont force a full update'
+			echo  '[*** /etc/.refresh_my_update_script exists, continuing ***]'
 fi
 	
 
@@ -63,7 +64,7 @@ ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nd
 #tput clear
 
 echo 'installing pre-requirements'
-${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
+${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install screen apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
 #tput clear
 
 #test of files, that i want to have removed
@@ -74,8 +75,8 @@ if [ ! -e "/etc/cron.d/self-update" ]; then
 	#tput clear
 fi 
 
-echo 'removing apt-listchanges, it sucks a lot..'
-${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && ${SUDO}  apt -qqqqqqy remove --purge apt-listchanges; echo 'removed apt-listchanges, next step'
+
+${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && ${SUDO}  apt -qqqqqqy remove --purge apt-listchanges 2>&1 >/dev/null; echo 'removed apt-listchanges, which sucked, next step'
 
 if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
     echo deleting old proxy config
