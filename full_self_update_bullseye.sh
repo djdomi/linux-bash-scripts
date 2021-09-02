@@ -28,7 +28,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 		touch /etc/.refresh_my_update_script
 	tput clear
 		else
-			echo  'Step 01-[*** /etc/.refresh_my_update_script exists, continuing ***]'
+			else 'echo Step 01-[*** Skipped ***]'
 fi
 	
 
@@ -50,21 +50,21 @@ ${SUDO} export LC_ALL=de_DE.UTF-8
 touch /etc/.locale.is_generated
 	#tput clear
 	else
-	echo 'Step 03-[*** It was not needed to generate Locales ***]'
+	else 'echo Step 03-[*** Skipped ***]'
 fi 
 
 
 
 #${SUDO} export LC_ALL=$LANG
 
-echo 'Step 04-[*** creating locale.purge as pre-selection file. ***]'
+echo 'Step 04-[*** Always Creating locale.purge as pre-selection file. ***]'
 ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
 
 
 # Install pre-requirements
 #tput clear
 
-echo 'Step 05-[*** installing pre-requirement Packages via apt-get ***]'
+echo 'Step 05-[*** Always installing pre-requirement Packages via apt-get ***]'
 ${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install screen apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
 #tput clear
 
@@ -76,56 +76,52 @@ if [ ! -e "/etc/cron.d/self-update" ]; then
 	${SUDO} chmod 644 /etc/cron.d/self-update
 	#tput clear
 	else
-		echo 'Step 6-[*** It was not needed to add the cronjob ***]'
+		echo 'Step 06-[*** Skipped ***]'
 fi 
 
 
-${SUDO} test -f /etc/apt/apt.conf.d/20listchanges && ${SUDO}  apt -qqqqqqy remove --purge apt-listchanges 2>&1 >/dev/null; echo 'removed apt-listchanges, which sucked, next step'
+
 
 if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
     echo 'Step 07-[*** Deleting old proxy config ***]'
 		${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
+		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
 		${SUDO} touch /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
 	#tput clear
-	else 'Step 7-[*** It was not needed to alter the proxy config ***]'
+	else 'echo Step 07-[*** Skipped ***]'
 fi
 
 
-
-
-
-if [ ! -e "/etc/apt/apt.conf.d/99proxy" ]; then
-    echo 'Step 09-[*** adding Proxy: /etc/apt/apt.conf.d/99proxy ***]'
-		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
-	#tput clear
-	else
-	echo 'Step 09-[*** NOT adding Proxy ***]'
-fi
 
 
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 
 if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; then
-    echo 'Step 10-[******* deleting old proxy config *******]'
+    echo 'Step 08-[******* deleting cache configurations *******]'
 		${SUDO} rm -f etc/apt/apt.conf.d/dont_keep_download_files /etc/apt/apt.conf.d/00_disable-cache-directories
 		${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";'	| tee /etc/apt/apt.conf.d/dont_keep_download_files 2>&1 >/dev/null
 		${SUDO} echo -e 'Dir::Cache "";\nDir::Cache::archives "";'			| tee  /etc/apt/apt.conf.d/00_disable-cache-directories 2>&1 >/dev/null
 		${SUDO} touch /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
 	#tput clear
+	else
+	else 'echo Step 08-[*** Skipped ***]'
+	
 fi
 
 
 #add default compress options to /etc/logroate.d
 
 if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
-    echo 'Step 11-[** adding /etc/logrotate.d/0000_compress_all ***]'
+    echo 'Step 09-[** adding /etc/logrotate.d/0000_compress_all ***]'
 		${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
 	#tput clear
+	else
+	else 'echo Step 09-[*** Skipped ***]'
 fi
 
 
 #sury.org packages
-echo 'step 12-[*** Always Updating 3rd party Sources and ***]'
+echo 'step 10-[*** Always Updating 3rd party Sources and ***]'
 ${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
 ${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
@@ -134,6 +130,8 @@ ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/ap
 if [ ! -e "/etc/sources.list.d/.packages.sury.org.list" ]; then
 ${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
+
+fi
 #tput clear
 
 #Update source.list (make it empty)
