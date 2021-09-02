@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash 
 
 #fail the script, in case on error
 #set -euxo pipefail
@@ -25,7 +25,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 		touch /etc/.refresh_my_update_script
 	#tput clear
 		else
-			echo "/etc/.refresh_my_update_script Exists, we dont force a full update"
+			echo '/etc/.refresh_my_update_script Exists, we dont force a full update'
 fi
 	
 
@@ -38,7 +38,6 @@ dpkg --configure -a --force-confold --force-confdef
 echo Settings variables
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
-${SUDO} export cronfile=/etc/cron.d/self-update
 #tput clear
 # generate locales
 if [ ! -e "/etc/.locale.is_generated" ]; then
@@ -69,8 +68,8 @@ ${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force
 
 #test of files, that i want to have removed
 
-if [ ! -e "$cronfile" ]; then
-    ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee $cronfile	
+if [ ! -e "/etc/cron.d/self-update" ]; then
+    ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee /etc/cron.d/self-update
 	${SUDO} chmod 644 /etc/cron.d/self-update
 	#tput clear
 fi 
@@ -181,8 +180,8 @@ ${SUDO} /usr/sbin/localepurge
 if [ -f /var/run/reboot-required ] 
 then
 	#tput clear
-			echo "[*** reboot is required for your machine ***]"
-			echo "[*** 10 Seconds remainig ***]"
+			echo '[*** reboot is required for your machine ***]'
+			echo '[*** 10 Seconds remainig ***]'
 					sync
 					sleep 10
 				reboot
