@@ -114,13 +114,13 @@ fi
 echo 'step 10-[*** Always Updating 3rd party GPG-Keys ***]'
 ${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
 ${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
-${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind/apt.gpg 
+${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind-dev/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 
 if [ ! -e "/etc/apt/sources.list.d/.packages.sury.org.list" ]; then
 		echo 'Step 11-[*** Updating Third-Party Source ***]'
 ${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
-${SUDO} echo 'deb https://packages.sury.org/bind/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
+${SUDO} echo 'deb https://packages.sury.org/bind-dev/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
 	${SUDO}	echo > /etc/apt/sources.list.d/.packages.sury.org.list
 	else
 		echo 'Step 11-[*** Skipped ***]'
