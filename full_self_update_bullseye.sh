@@ -36,7 +36,7 @@ fi
 
 echo 'Step 02-[*** Checking for already, broken installation ***]'
 dpkg --configure -a --force-confold --force-confdef
-echo 'Acquire::ForceIPv4 "true";' >/etc/apt/apt.conf.d/99force-ipv4
+
 
 
 # generate locales
@@ -80,6 +80,7 @@ fi
 if [ ! -e "/etc/apt/apt.conf.d/.proxy_was_set_automaticly_already" ]; then
     echo 'Step 07-[*** Deleting old proxy config ***]'
 		${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
+		${SUDO} echo 'Acquire::ForceIPv4 "true";' >/etc/apt/apt.conf.d/99force-ipv4
 		${SUDO} echo 'Acquire::http::proxy "http://10.0.0.1:9999"; ' | tee /etc/apt/apt.conf.d/99proxy 2>&1 >/dev/null 
 		${SUDO} touch /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
 	#tput clear
