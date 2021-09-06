@@ -36,6 +36,7 @@ fi
 
 echo 'Step 02-[*** Checking for already, broken installation ***]'
 dpkg --configure -a --force-confold --force-confdef
+echo 'Acquire::ForceIPv4 "true";' >/etc/apt/apt.conf.d/99force-ipv4
 
 
 # generate locales
