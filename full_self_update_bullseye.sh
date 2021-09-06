@@ -57,7 +57,7 @@ fi
 
 #${SUDO} export LC_ALL=$LANG
 
-echo 'Step 04-[*** Always Creating locale.purge as pre-selection file. ***]'
+echo 'Step 04-[*** Always installing locale.purge as pre-selection file. ***]'
 ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nde\\nde_DE\\nde_DE.UTF-8\\nde_DE@euro\\nen\\nen_US\\nen_US.ISO-8859-15\\nen_US.UTF-8 | tee /etc/locale.nopurge  2>&1 >/dev/null
 
 
@@ -65,14 +65,14 @@ ${SUDO}  echo -e USE_DPKG\\nMANDELETE\\nDONTBOTHERNEWLOCALE\\nSHOWFREEDSPACE\\nd
 #tput clear
 
 echo 'Step 05-[*** Always installing pre-requirement Packages via apt-get ***]'
-${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install screen apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common
+${SUDO} apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -yqqqq install screen apt-file locate apt-transport-https lsb-release ca-certificates curl localepurge aria2 software-properties-common  2>&1 >/dev/null
 #tput clear
 
 #test of files, that i want to have removed
 
 if [ ! -e "/etc/cron.d/self-update" ]; then
 	echo 'Step 06-[*** Adding cronjob for self updating ***]'
-    ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee /etc/cron.d/self-update
+    ${SUDO} echo '@daily root screen -d -m /bin/bash -c "$(curl -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)" 2>&1>/dev/null' | tee /etc/cron.d/self-update  2>&1 >/dev/null
 	${SUDO} chmod 644 /etc/cron.d/self-update
 	#tput clear
 	else
@@ -183,6 +183,6 @@ then
 		sync
 			echo ''
 			echo "${GREEN}[*** no reboot required ***]${NC}"
-			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update ***]'
+			echo '[*** remind, aslong /etc/.refresh_my_update_script exists, we wont force a full update ***]'
 			echo ''
 fi
