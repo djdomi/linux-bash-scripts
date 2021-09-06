@@ -30,7 +30,6 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	${SUDO} rm -f /etc/apt/sources.list.d/.packages.sury.org.list
 	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
 	${SUDO} touch /etc/.refresh_my_update_script
-	tput clear
 		else 
 			echo 'Step 01-[*** /etc/.refresh_my_update_script was there, we did not update all ***]'
 fi
