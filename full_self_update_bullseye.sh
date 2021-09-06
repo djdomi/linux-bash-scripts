@@ -6,7 +6,9 @@
 #Export Variables
 ${SUDO} export DEBIAN_FRONTEND=noninteractive
 ${SUDO} export APT_LISTCHANGES_FRONTEND=none
-
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+NC=`tput sgr0`
 # screen -d -m /bin/bash -c "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh?$(date +%s))"
 
 #Check if we need sudo
@@ -24,12 +26,13 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 	${SUDO} rm -f /etc/.locale.is_generated
 	${SUDO} rm -f /etc/apt/sources.list.d/.main.list_was_set_automaticly_aready
 	${SUDO} rm -f /etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already
+	${SUDO} rm -f /etc/apt/apt.conf.d/.proxy_was_set_automaticly_already
 	${SUDO} rm -f /etc/apt/sources.list.d/.packages.sury.org.list
 	${SUDO} rm -f /etc/apt/apt.conf.d/*proxy*
-	${SUDO} 	touch /etc/.refresh_my_update_script
+	${SUDO} touch /etc/.refresh_my_update_script
 	tput clear
 		else 
-		echo 'Step 01-[*** Skipped ***]'
+			echo 'Step 01-[*** /etc/.refresh_my_update_script was there, we did not update all ***]'
 fi
 	
 #pre-run dpkg, if it failed previously
@@ -157,7 +160,7 @@ ${SUDO} apt-get -qqqqq update
 #tput clear
 echo '[*** Well... Lets Starting system upgrade... Please be Patient ***]'
 DEBIAN_FRONTEND=noninteractive 
-${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade 
+${SUDO} apt-get -qqqqqqy -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade  2>&1 > /var/log/autoupdate.log
 #tput clear
 
 
@@ -171,14 +174,16 @@ ${SUDO} /usr/sbin/localepurge 2>&1 >/dev/null
 if [ -f /var/run/reboot-required ] 
 then
 	#tput clear
-			echo '[*** reboot is required for your machine ***]'
-			echo '[*** 10 Seconds remainig ***]'
+			echo -e {RED}[*** reboot is required for your machine ***] {NC}
+			echo -e '[*** 10 Seconds remainig ***]'
 					sync
 					sleep 10
 				reboot
 	else
 		#tput clear
 		sync
-			echo '[*** all is fine, no reboot required ***]'
-			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update" ***]'
+			echo ''
+			echo "${GREEN}[*** no reboot required ***]${NC}"
+			echo '[*** remind, when /etc/.refresh_my_update_script Exists, we dont force a full update ***]'
+			echo ''
 fi
