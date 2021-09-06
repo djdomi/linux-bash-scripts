@@ -93,7 +93,7 @@ fi
 #disable apt caching behavior due we use apt-cacher-ng and want to save the space
 
 if [ ! -e "/etc/apt/apt.conf.d/.cache_disable_was_set_automaticly_already" ]; then
-    echo 'Step 08-[******* deleting cache configurations *******]'
+    echo 'Step 08-[*** deleting cache configurations ***]'
 		${SUDO} rm -f etc/apt/apt.conf.d/dont_keep_download_files /etc/apt/apt.conf.d/00_disable-cache-directories
 		${SUDO} echo 'Binary::apt::APT::Keep-Downloaded-Packages "false";'	| tee /etc/apt/apt.conf.d/dont_keep_download_files 2>&1 >/dev/null
 		${SUDO} echo -e 'Dir::Cache "";\nDir::Cache::archives "";'			| tee  /etc/apt/apt.conf.d/00_disable-cache-directories 2>&1 >/dev/null
@@ -107,7 +107,7 @@ fi
 #add default compress options to /etc/logroate.d
 
 if [ ! -e "/etc/logrotate.d/0000_compress_all" ]; then
-    echo 'Step 09-[** adding /etc/logrotate.d/0000_compress_all ***]'
+    echo 'Step 09-[*** adding /etc/logrotate.d/0000_compress_all ***]'
 		${SUDO} echo -e compress\\ncompresscmd /usr/bin/xz\\nuncompresscmd /usr/bin/unxz\\ncompressext .xz\\ncompressoptions -T6 -9\\nmaxsize 50M | tee /etc/logrotate.d/0000_compress_all  2>&1 >/dev/null
 	#tput clear
 	else
@@ -116,14 +116,15 @@ fi
 
 #sury.org packages
 echo 'step 10-[*** Always Updating 3rd party GPG-Keys ***]'
-${SUDO} test -f /etc/apt/trusted.gpg.d/bind.gpg && rm -f /etc/apt/trusted.gpg.d/bind.gpg 
-${SUDO} test -f /etc/apt/trusted.gpg.d/php.gpg && rm -f /etc/apt/trusted.gpg.d/php.gpg
+${SUDO} rm -f /etc/apt/trusted.gpg.d/bind.gpg*
+${SUDO} rm -f /etc/apt/trusted.gpg.d/php.gpg*
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/bind.gpg https://packages.sury.org/bind-dev/apt.gpg 
 ${SUDO} wget -qO /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+${SUDO} touch /etc/apt/trusted.gpg.d/php.gpg /etc/apt/trusted.gpg.d/bind.gpg
 
 if [ ! -e "/etc/apt/sources.list.d/.packages.sury.org.list" ]; then
 		echo 'Step 11-[*** Updating Third-Party Source ***]'
-${SUDO} echo 'deb https://packages.sury.org/php/  bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
+${SUDO} echo 'deb https://packages.sury.org/php/ bullseye main' | tee /etc/apt/sources.list.d/bind.list 2>&1 >/dev/null
 ${SUDO} echo 'deb https://packages.sury.org/bind-dev/ bullseye main' | tee /etc/apt/sources.list.d/php.list  2>&1 >/dev/null
 	${SUDO}	echo > /etc/apt/sources.list.d/.packages.sury.org.list
 	else
@@ -136,7 +137,7 @@ if [ ! -e "/etc/apt/sources.list.d/.main.list_was_set_automaticly_aready" ]; the
 		#tput clear
 			echo 'Step 12-[*** Clearing sources.list since we use /etc/apt/sources.list.d/main.list ***]'
 			${SUDO} echo > /etc/apt/sources.list
-				rm -f /etc/apt/sources.list.d/main.list
+			${SUDO}apt m	rm -f /etc/apt/sources.list.d/main.list
 		${SUDO} echo 'deb     http://deb.debian.org/debian bullseye main contrib non-free'							| tee    /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free'							| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
 		${SUDO} echo 'deb     http://deb.debian.org/debian-security/ bullseye-security main contrib non-free' 		| tee -a /etc/apt/sources.list.d/main.list 2>&1 >/dev/null
