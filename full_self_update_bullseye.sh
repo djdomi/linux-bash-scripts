@@ -41,7 +41,7 @@ echo 'Acquire::ForceIPv4 "true";' >/etc/apt/apt.conf.d/99force-ipv4
 
 # generate locales
 if [ ! -e "/etc/.locale.is_generated" ]; then
-		echo 'Step 3-[***  generating locales, please wait ***]'
+		echo 'Step 03-[***  generating locales, please wait ***]'
 ${SUDO} echo -e de_DE ISO-8859-1\\nde_DE.UTF-8 UTF-8\\nde_DE@euro ISO-8859-15\\nen_US ISO-8859-1\\nen_US.ISO-8859-15 ISO-8859-15\\nen_US.UTF-8 UTF-8  | tee /etc/locale.gen  2>&1 >/dev/null
 ${SUDO} locale-gen   2>&1 >/dev/null
 ${SUDO} export LANGUAGE=$LC_ALL
