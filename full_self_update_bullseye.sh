@@ -9,7 +9,7 @@ ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0`
-# screen -d -m /bin/bash -c "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh?$(date +%s))"
+# screen -d -m /bin/bash -ec "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
 
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
@@ -35,7 +35,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 fi
 	
 #pre-run dpkg, if it failed previously
-
+killall dpkg
 echo 'Step 02-[*** Checking for already, broken installation ***]'
 dpkg --configure -a --force-confold --force-confdef
 
@@ -174,7 +174,7 @@ ${SUDO} /usr/sbin/localepurge 2>&1 >/dev/null
 if [ -f /var/run/reboot-required ] 
 then
 	#tput clear
-			echo -e {RED}[*** reboot is required for your machine ***] {NC}
+			echo -e "${RED}[*** reboot is required for your machine ***] {NC}"
 			echo -e '[*** 10 Seconds remainig ***]'
 					sync
 					sleep 10
