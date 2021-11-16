@@ -35,9 +35,7 @@ if [ ! -e "/etc/.refresh_my_update_script" ]; then
 fi
 	
 #pre-run dpkg, if it failed previously
-if [ ! -e "/usr/bin/killall" ]; then
-apt -qqqyyyy install psmisc
-fi
+
 killall dpkg
 echo 'Step 02-[*** Checking for already, broken installation ***]'
 dpkg --configure -a --force-confold --force-confdef
