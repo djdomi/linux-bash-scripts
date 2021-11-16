@@ -9,7 +9,7 @@ ${SUDO} export APT_LISTCHANGES_FRONTEND=none
 RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 NC=`tput sgr0`
-# screen -d -m /bin/bash -ec "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye.sh)"
+# screen -d -m /bin/bash -ec "$(curl --compressed -sL https://raw.githubusercontent.com/djdomi/linux-bash-scripts/master/full_self_update_bullseye_no_proxy.sh)"
 
 #Check if we need sudo
 if [ "$(whoami)" != "root" ]; then
